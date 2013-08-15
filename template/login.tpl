@@ -11,9 +11,10 @@
 {% else %}
 <h4>请输入帐号和密码</h4>
 <form action="/login/" method="post">
+    {% csrf_token %}
 	<dl>
 	<dt>帐号</dt>
-	<dd><input type="text" name="account"></dd>
+	<dd><input type="text" name="username"></dd>
 	<dt>密码</dt>
 	<dd><input type="password" name="password"><dd>
 	<div align="center">

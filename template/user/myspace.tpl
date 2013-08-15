@@ -4,7 +4,7 @@
 	<table>
 	<tr valign="top">
 	<td>
-	{% include 'mynavlist.tpl' %}	
+	{% include 'user/mynavlist.tpl' %}	
 	</td>	
 	
 	<td>

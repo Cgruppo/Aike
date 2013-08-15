@@ -2,7 +2,9 @@
 # Django settings for Aike project.
 import os
 import socket
-HERE = os.path.dirname(__file__)
+import pytz
+
+SITE_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 DEBUGNAME = "freedom-PC"
 #开启调试请将以下两行注释互换
@@ -17,13 +19,13 @@ ADMINS = (
 
 DB_NAME = 'aike'
 DB_USER = 'root'
-DB_PASS = ''
+DB_PASS = 'root'
 DB_HOST = '127.0.0.1'
 DB_PORT = '3306'
 
-AUTHENTICATION_BACKENDS=(
-	'app.userApp.auth.UserAuth',
-)
+# AUTHENTICATION_BACKENDS=(
+#     'app.userApp.auth.UserAuth',
+# )
 
 MANAGERS = ADMINS
 
@@ -33,7 +35,7 @@ DATABASES = {
         #'NAME': 'db/aike.db',                      # Or path to database file if using sqlite3.
         'NAME' : DB_NAME,
         'USER': DB_USER,                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': DB_PASS,                  # Not used with sqlite3.
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': DB_PORT,                      # Set to empty string for default. Not used with sqlite3.
     },
@@ -43,7 +45,7 @@ DATABASES = {
         #'NAME': 'db/user.db',                      # Or path to database file if using sqlite3.
         'NAME' : DB_NAME,
         'USER': DB_USER,                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': DB_PASS,                  # Not used with sqlite3.
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': DB_PORT,                      # Set to empty string for default. Not used with sqlite3.
     },
@@ -53,29 +55,30 @@ DATABASES = {
         #'NAME': 'db/activity.db',                      # Or path to database file if using sqlite3.
         'NAME' : DB_NAME,
         'USER': DB_USER,                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': DB_PASS,                  # Not used with sqlite3.
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': DB_PORT,                      # Set to empty string for default. Not used with sqlite3.
     },
 
-	'noticedb': {
+    'noticedb': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         #'NAME': 'db/notice.db',                      # Or path to database file if using sqlite3.
         'NAME' : DB_NAME,
         'USER': DB_USER,                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': DB_PASS,                  # Not used with sqlite3.
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': DB_PORT,                      # Set to empty string for default. Not used with sqlite3.
     },
 }
 
-DATABASE_ROUTERS = ['app.settings.appdb']
+# DATABASE_ROUTERS = ['app.settings.appdb'] 
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Shanghai'
+CN_tz = pytz.timezone(TIME_ZONE)
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -120,7 +123,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	HERE+STATIC_URL,
+    SITE_ROOT+STATIC_URL,
 )
 
 # List of finder classes that know how to find static files in
@@ -144,8 +147,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-	#以下中间件会使得POST发生错误，暂时关闭
-   	#'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -161,13 +163,12 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'template',
-	'template/myspace',
-	'template/show',
+    os.path.join(SITE_ROOT, 'template'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS=(
-	'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
 )
 
 INSTALLED_APPS = (
@@ -182,13 +183,17 @@ INSTALLED_APPS = (
     'app.activityApp',
     'app.friendApp',
     'app.noticeApp',
-	'app.qrcodeApp',
+    'app.qrcodeApp',
 
     # Uncomment the next line to enable the admin:
-    #'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/myspace/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

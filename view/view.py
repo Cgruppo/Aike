@@ -16,21 +16,21 @@ import Image
 
 #测试二维码访问权限
 def v_test(request):
-	img = Image.open(u"./Aike/static/qrcode/2.gif")
-	data={}
-	data["img"] = img
-	return render_to_response('test.tpl',data)
+    img = Image.open(u"./Aike/static/qrcode/2.gif")
+    data={}
+    data["img"] = img
+    return render_to_response('test.tpl',data)
 
 def v_index(request):
-	"""用于展示首页"""
-	data={}
-	if request.user.is_authenticated():
-		data['user']=request.user.account
-	data['title']="爱克,释放你的活力！"
-	data['activitycount'] = len(Activity.objects.all())
-	data['usercount'] = len(User.objects.all())
-#	return render_to_response('index.tpl',data,context_instance=RequestContext(request))
-	return myrender_to_response(request,'index.tpl',data)
+    """用于展示首页"""
+    data={}
+    if request.user.is_authenticated():
+        data['user']=request.user.account
+    data['title']="爱克,释放你的活力！"
+    data['activitycount'] = len(Activity.objects.all())
+    data['usercount'] = len(User.objects.all())
+#    return render_to_response('index.tpl',data,context_instance=RequestContext(request))
+    return myrender_to_response(request,'index.tpl',data)
 
 
 
@@ -47,12 +47,12 @@ def v_index(request):
 
 
 def v_help(request):
-	"""帮助页"""
-	return myrender_to_response(request,'help.tpl',{})
+    """帮助页"""
+    return myrender_to_response(request,'help.tpl',{})
 
 #仅测试使用
 def rejson(request):
-	d = {'key1':'测试','key2':['1','2']}
-	j = json.dumps(d)
-	return HttpResponse(j)
+    d = {'key1':'测试','key2':['1','2']}
+    j = json.dumps(d)
+    return HttpResponse(j)
 
