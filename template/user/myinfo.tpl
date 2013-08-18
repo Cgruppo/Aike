@@ -4,11 +4,11 @@
 	<table>
 	<tr>
 	<th><label>帐号:</label></th>
-	<th>{{request.user.account}}</th>
+	<th>{{request.user.username}}</th>
 	</tr>
 	<tr>
 	<th><label>注册时间:</label></th>
-	<th>{{request.user.registerdate}}</th>
+	<th>{{request.user.date_joined}}</th>
 	</tr>
 	{{form.as_table}}
 	<tr>

@@ -12,16 +12,26 @@
 <p>你已经登陆</p>
 <p>{{request.user}}</p>
 {% else %}
-<div class="row">
+<div class="row-fluid">
 <fieldset>
 <legend>请输入个人信息</legend>
+
+<div class="span5">
+<h3 align="center">注册须知</h3>
+<br>
+<pre>
+1.本站目前处于测试阶段，还存在很多bug
+2.……
+</pre>
+</div>
+
 <div class="span6">
 <div class="alert alert-info">
-<br>
 <p>加*号为必填项</p>
-<br>
 </div>
 <br>
+
+{% comment %}
 <div>
 <button class="btn btn-info" id="hide">隐藏非必填字段</button>
 </div>
@@ -97,16 +107,17 @@
 		<input type="submit" value="注册" class="btn btn-success">
 	</div>
 </form>
-</div><!-- span8 -->
+{% endcomment %}
 
-<div class="span5 well">
-<h3 align="center">注册须知</h3>
-<br>
-<pre>
-1.本站目前处于测试阶段，还存在很多bug
-2.……
-</pre>
+<div >
+	<form action="{% url register %}" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="注册" class="btn btn-success">
+	</form>
 </div>
+
+</div><!-- span6 -->
 
 </fieldset>
 </div><!-- row -->

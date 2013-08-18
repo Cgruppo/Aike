@@ -23,28 +23,24 @@ def v_register(request):
     data['form']=form
     if request.method=='GET':
         return myrender_to_response(request,'register.tpl',data)
-    else:
+    else: #POST
         uf = UserRegisterForm(request.POST)
         if uf.is_valid():
-            cd = uf.cleaned_data
-            user = AikeUser()
-            user.account=cd['account']
-            user.password=user.hashed_password(cd['password'])
-            user.alias=cd['alias']
-            user.name=cd['name']
-            user.sex=bool(int(cd['sex']))
-            user.email=cd['email']
-            if cd['age']==None:
-                user.age=0
-            else:
-                user.age=cd['age']
-            user.city=cd['city']
-            user.university=cd['university']
-            user.lbs=''
-            user.auth=False
-            user.save()
-            g1 = Group.objects.create(name=u"未分组",owner=user)
-            g1.save()
+            username = uf.cleaned_data['username']
+            password = uf.cleaned_data['password']
+            try :
+                user = User.objects.get(username=username)
+                if user:
+                    #TODO
+                    return myrender_to_response(request,'register.tpl',data)
+            except User.DoesNotExist:
+                user = User.objects.create_user(username,username,password)
+            uf.cleaned_data['user'] = user
+            aikeuser = uf.save(commit=False)
+            aikeuser.user = user
+            aikeuser.save()
+            # g1 = Group.objects.create(name=u"未分组",owner=user)
+            # g1.save()
             data['info']=u"注册成功！"
             return myrender_to_response(request,'info.tpl',data)
         else :
@@ -80,7 +76,7 @@ def v_myinfo(request):
         user = request.user
         aikeuser = AikeUser.objects.get(user=request.user)
         #新建个人信息页表单并初始化为当前用户信息
-        ucf = UserChangeForm(initial={'alias':aikeuser.alias,'sex':int(aikeuser.sex),'name':aikeuser.name,'age':aikeuser.age,'city':aikeuser.city,'email':aikeuser.email,'university':aikeuser.university,'lbs':aikeuser.lbs,'auth':aikeuser.auth,})
+        ucf = UserChangeForm(initial={'alias':aikeuser.alias,'sex':int(aikeuser.sex),'name':aikeuser.name,'age':aikeuser.age,'city':aikeuser.city,'email':user.email,'university':aikeuser.university,'lbs':aikeuser.lbs,'auth':aikeuser.auth,})
         data['form']=ucf
         data['mypage']='user/myinfo.tpl'
         return myrender_to_response(request,'user/myspace.tpl',data)

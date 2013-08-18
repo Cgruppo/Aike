@@ -33,18 +33,7 @@ def v_index(request):
     return myrender_to_response(request,'index.tpl',data)
 
 
-
-
-
-
-
-
-
-
 #TODO 活动分类
-
-
-
 
 def v_help(request):
     """帮助页"""

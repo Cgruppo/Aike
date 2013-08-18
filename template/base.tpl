@@ -7,6 +7,7 @@
 </head>
 <body>
 <!-- Navbar -->
+<div id="wrap">
 <div class="navbar navbar-fixed-top">
 	<div class="navbar navbar-inner">
 		<div class="container">
@@ -49,7 +50,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="login">
+<div class="modal hide fade" id="login">
     <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3>请登录</h3>
@@ -61,20 +62,19 @@
 			{% else %}
 			<h4>请输入帐号和密码</h4>
 			<form action="/login/" method="post">
+				{% csrf_token %}
 				<dl>
 				<dt>帐号</dt>
 				<dd><input type="text" name="account"></dd>
 				<dt>密码</dt>
-				<dd><input type="password" name="password"><dd>
+				<dd><input type="password" name="password"></dd>
 				<div align="center">
 				<br><input type="submit" value="登陆" class="btn btn-info">
 				</div>
-				<dl>
+				</dl>
 			</form>
 			{% endif %}
 		</div>
-    </div>
-    
     </div>
 
 </div><!-- login -->
@@ -83,6 +83,8 @@
 {% block content %}
 {% endblock%}
 </div>
+
+</div> <!-- wrap -->
 {% include 'foo.tpl' %}
 {% block js %}
 {% endblock %}

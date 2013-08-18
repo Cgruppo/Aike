@@ -1,21 +1,13 @@
 {% extends 'base.tpl' %}
 {% block content %}
-<div class=row>
-	<table>
-	<tr valign="top">
-	<td>
-	{% include 'user/mynavlist.tpl' %}	
-	</td>	
-	
-	<td>
-	<div class="span10">
+<div class="row-fluid">
+		<div class="span2">
+		{% include 'user/mynavlist.tpl' %}	
+		</div>
+	<div class="span8">
 	{% if mypage %}
 	{% include mypage %}
 	{% endif %}
 	</div>
-
-	</td>
-	</tr>
-	</table>
 </div>
 {% endblock%}

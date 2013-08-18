@@ -23,7 +23,7 @@ urlpatterns = patterns('',
             {'template_name': 'login.tpl'}, name='logon'),
     url(r'^logout/$',v_logout),
     url(r'^help/$',v_help),
-    url(r'^register/$',v_register),
+    url(r'^register/$',v_register,name="register"),
     #test
     url(r'^test/$',v_test),
 

@@ -1,8 +1,7 @@
 {% extends 'base.tpl' %}
 {% block content %}
-<div class="row">
-<div class="span4">&nbsp;</div>
-<div class="span4 well">
+<div class="row-fluid">
+<div class="span8 well offset2">
 {{info}}
 <h2>请先登陆</h2>
 <hr>
@@ -10,7 +9,7 @@
 <h4>您已经登陆！</h4>
 {% else %}
 <h4>请输入帐号和密码</h4>
-<form action="/login/" method="post">
+<form action="{% url logon %}" method="post">
     {% csrf_token %}
 	<dl>
 	<dt>帐号</dt>
