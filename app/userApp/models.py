@@ -7,7 +7,7 @@ import hashlib
 
 class AikeUser(models.Model):
     #用户数据模型
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     alias = models.CharField(max_length=30,verbose_name="别名")
     name = models.CharField(max_length=30,null=True,blank=True,verbose_name="真名")
     sex = models.BooleanField(verbose_name="性别",default=False)

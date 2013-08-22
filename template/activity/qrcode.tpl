@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
 <div class="span3 well">
-	{% include 'acnavlist.tpl' %}
+	{% include 'activity/acnavlist.tpl' %}
 </div>
 
 <div class="span8 well">

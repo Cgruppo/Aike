@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^u(\d+)/$',v_visit),
     url(r'^show/',include('app.activityApp.urls')),
     url(r'^friend/',include('app.friendApp.urls')),
-    url(r'^create/$',v_create),
+    url(r'^create/$',v_create,name="activity_create"),
     url(r'^login/$', 'django.contrib.auth.views.login', \
             {'template_name': 'login.tpl'}, name='logon'),
     url(r'^logout/$',v_logout),

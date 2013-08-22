@@ -3,10 +3,12 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response,RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.views.generic import ListView, CreateView, DeleteView, DetailView
 from view.utils import myrender_to_response
 from app.userApp.models import User
 from django.contrib import messages
 from app.activityApp.models import Activity,Comment
+from app.userApp.models import AikeUser
 from app.activityApp.forms import CommentAddForm,ActivityCreateForm
 from app.qrcodeApp.utils import Qrcode,qr_get
 
@@ -18,18 +20,34 @@ def v_create(request):
     if request.method=="GET":
         acf = ActivityCreateForm()
         data['ActivityCreateForm'] = acf
-
         return myrender_to_response(request,'activity/create.tpl',data)
     elif request.method == "POST" :
         acf = ActivityCreateForm(request.POST)
         if acf.is_valid():
-            acf.save()
+            ac = acf.save(commit=False)
+            ac.creater = request.user
+            ac.save()
+            ac.organizer.add(request.user)
+            ac.save()
             messages.success(request,"创建成功")
+            print "success"
             return HttpResponseRedirect(reverse('activity_create'))
         else :
+            print "faile"
+            print acf.errors
             messages.error(request,"请检验数据是否符合格式")
             return HttpResponseRedirect(reverse('activity_create'))
 
+
+class ActivityListView(ListView):
+    #获得所有活动
+    model = Activity
+    context_object_name = "activitys"
+    #paginate_by = 15
+    #def get_context_data(self):
+        #pass
+
+# Old
 def v_show(request):
     """活动展示页"""
     data={}
@@ -37,6 +55,26 @@ def v_show(request):
     data['activitys']=Activity.objects.all()
     return myrender_to_response(request,'activity/show.tpl',data)
 
+class ActivityDetailView(DetailView):
+    model = Activity
+    context_object_name = "activity"
+
+    def get_context_data(self,**kwargs):
+        context = super(ActivityDetailView,self).get_context_data(**kwargs)
+        activity = context["activity"]
+        try :
+            if activity.activity_participant.get(user=request.user):
+                hasjoin = True
+            #except participantRelation.DoesNotExist:
+        except :
+            hasjoin = False
+            context['hasjoin'] = hasjoin
+            context['comments'] = activity.comment_activity.all()
+            context['comment_add'] = CommentAddForm()
+        return context
+
+
+# Old
 def v_acitem(request,acid):
     """活动展示单页"""
     data={}
@@ -76,6 +114,7 @@ def v_acitem(request,acid):
         else :
             return HttpResponseRedirect('/login/')
 
+
 @login_required
 def v_acitemadmin(request,acid):
     '''活动信息管理'''
@@ -88,7 +127,7 @@ def v_acitemadmin(request,acid):
             try :
                 #判断活动和用户是否是举办关系
                 ac.organizer.get(username=user.username)
-            except UserDoseNotExist:
+            except User.DoesNotExist:
                 messages.warning(request,u"你没有对该活动修改的权限")
                 return myrender_to_response(request,'info.tpl',data)
 
@@ -127,41 +166,36 @@ def v_addOrganizer(request,acid):
     data={}
     acid = int(acid)
     ac = Activity.objects.get(id=acid)
-    organizer = User.objects.get(alias=request.GET['alias'])
-    oR = organizerRelation.objects.create(activity=ac,user=organizer)
-    data['info'] = "已经添加了xxx共同举办xxx活动"
+    aikeuser = AikeUser.objects.get(alias=request.GET['alias'])
+    organizer = aikeuser.user
+    ac.organizer.add(organizer)
+    messages.success(request,u"已经添加了%s共同举办%s活动"%(aikeuser.alias,ac.name))
     return myrender_to_response(request,'info.tpl',data)
 
 @login_required
 def v_join(request,acid):
     """活动报名功能"""
-    data={}
     acid=int(acid)
-    if request.user.is_authenticated():
-        user = request.user
-        ac = Activity.objects.get(id=acid)
-        #获取所有已报名参加的人
-        pt = ac.participantR_activity.filter(user=user)
-        if pt :
-            data['info']=u"你已经报名参加，请不要重复提交！"
-        else:
-            pt = participantRelation.objects.create(user=user,activity=ac)
-            data['info']=u"你已经成功报名参加"
-        return myrender_to_response(request,'info.tpl',data)
-    else :
-        return HttpResponseRedirect('/login/')
+    user = request.user
+    ac = Activity.objects.get(id=acid)
+    #获取所有已报名参加的人
+    pt = ac.participant.filter(username=user.username)
+    if pt :
+        messages.info(request,u"你已经报名参加，请不要重复提交！")
+    else:
+        ac.participant.add(user)
+        messages.success(request,u"你已经成功报名参加%s活动"%ac.name)
+    return HttpResponseRedirect(reverse("activity_list"))
 
 @login_required
 def v_remove(request,acid):
     """活动退出功能"""
-    data={}
     acid=int(acid)
     user = request.user
     ac = Activity.objects.get(id=acid)
-    pt = ac.participantR_activity.get(user=request.user)
-    pt.delete()
-    data['info']=u"你已经退出"
-    return myrender_to_response(request,'info.tpl',data)
+    ac.participant(request.user)
+    messages.info(request,u"你已经退出%s活动"%ac.name)
+    return HttpResponseRedirect(reverse("activity_list"))
 
 @login_required
 def v_qrcode(request,acid):
@@ -174,8 +208,8 @@ def v_qrcode(request,acid):
     if ac:
         data['activity']=ac
         try:
-            pt = ac.participantR_activity.filter(user=request.user,activity=ac)
-        except participantRelation.DoesNotExist:
+            pt = ac.participant.filter(username=request.user.username)
+        except User.DoesNotExist:
             #TODO
             pt = None
             #生成电子票，第一个参数为内容，第二个参数为图片名字，第三个参数为宽
@@ -184,6 +218,6 @@ def v_qrcode(request,acid):
             data["has_per"] = True
         return myrender_to_response(request,'activity/qrcode.tpl',data)
     else:
-        data['info']=u"不存在该活动"
-        return myrender_to_response(request,'info.tpl',data)
+        message.error(request,u"不存在该活动")
+        return HttpResponseRedirect(reverse("activity_list"))
 

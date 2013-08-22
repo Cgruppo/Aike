@@ -80,6 +80,16 @@
 </div><!-- login -->
 
 <div class="container" >
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert fade in alert-block alert-{{ message.tags }}">
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
 {% block content %}
 {% endblock%}
 </div>

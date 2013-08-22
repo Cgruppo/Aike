@@ -13,12 +13,12 @@ class Qrcode:
         self.qstr = u"%s" % qstr
         self.width = int(width)
         q = Encoder()
-        isexist = os.path.isfile(u"./Aike/static/qrcode/%s.gif" % qname)
+        isexist = os.path.isfile(u"./static/qrcode/%s.gif" % qname)
         if isexist:
-            img = Image.open(u"./Aike/static/qrcode/%s.gif" % qname)
+            img = Image.open(u"./static/qrcode/%s.gif" % qname)
         else:
             img = q.encode(self.qstr,{"width":width})
-            img.save(u"./Aike/static/qrcode/%s.gif" % qname)
+            img.save(u"./static/qrcode/%s.gif" % qname)
     
 
 def qr_per(request):
@@ -45,7 +45,7 @@ def qr_get(request,acid):
             #TODO
             pt = None
         if pt:
-            img = open(u"./Aike/static/qrcode/%s.gif" % acid ,"rb").read()
+            img = open(u"./static/qrcode/%s.gif" % acid ,"rb").read()
             return HttpResponse(img,mimetype="image/gif")
         else:
             data["info"] = u"对不起，您未报名参加该活动，没有权限获取电子票!"

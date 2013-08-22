@@ -1,6 +1,7 @@
 <h2 style="text-align:center">{{title}}</h2>
 <div class="well">
 	<form action="/myspace/myinfo/" method="POST">
+		{% csrf_token %}
 	<table>
 	<tr>
 	<th><label>帐号:</label></th>

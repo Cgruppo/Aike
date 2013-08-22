@@ -1,7 +1,7 @@
 {% extends 'base.tpl' %}
 {% block content %}
 <div class="row-fluid">
-<div class="span8 well offset2">
+<div class="span4 well offset4">
 {{info}}
 <h2>请先登陆</h2>
 <hr>

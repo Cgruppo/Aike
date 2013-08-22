@@ -24,10 +24,10 @@ class Activity(models.Model):
     place = models.CharField(max_length=30)
     price = models.IntegerField()
     category = models.CharField(max_length=30,null=True,blank=True,verbose_name="分类")
-    creater = models.ForeignKey(User,related_name='activity_create')
+    creater = models.ForeignKey(User,related_name='activity_creater')
     organizer = models.ManyToManyField(User,related_name="activity_organizer")
-    sponsor = models.ManyToManyField(User,related_name="activity_sponsor")
-    participant = models.ManyToManyField(User,related_name="activity_participant")
+    sponsor = models.ManyToManyField(User,related_name="activity_sponsor",null=True,blank=True)
+    participant = models.ManyToManyField(User,related_name="activity_participant",null=True,blank=True)
     
     def __unicode__(self):
         return u"%s" % self.name

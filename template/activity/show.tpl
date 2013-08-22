@@ -6,8 +6,7 @@
 	
 	</div>
 
-	<div class="span8 ">
-	<div class="hero-unit">
+	<div class="span8">
 		{% for activity in activitys %}
 			{% if activity %}	
 				<div class="well" style="background-color:rgb(254,238,205)">
@@ -18,8 +17,8 @@
 					<dt>活动举办方：
 					</dt>
 						<dd>
-						{% for organizerR in activity.organizerR_activity.all %}
-						<a href="/u{{organizerR.user.id}}/">{{organizerR.user.alias}}</a>&nbsp;
+						{% for organizer in activity.organizer.all %}
+						<a href="/u{{organizer.id}}/">{{organizer.aikeuser.alias}}</a>&nbsp;
 						{% endfor %}
 						</dd>
 					<dt>活动简介：</dt>
@@ -37,7 +36,6 @@
 			{% else %}
 			{% endif %}
 		{% endfor %}
-	</div>
 	</div>
 </div><!-- row -->
 {% endblock%}

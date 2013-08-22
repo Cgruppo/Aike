@@ -70,7 +70,7 @@ def v_myspace(request):
 def v_myinfo(request):
     """个人信息页"""
     data={}
-    if     request.method=="GET":
+    if request.method=="GET":
         data['title']=u"我的个人信息"
         data['nav1']=u'active'
         user = request.user
@@ -83,13 +83,13 @@ def v_myinfo(request):
     else:
         user = request.user
         ucf = UserChangeForm(request.POST)
+        aikeuser = AikeUser.objects.get(user=request.user)
         #如果数据是合法的同步数据到数据库
         if ucf.is_valid():
             cd = ucf.cleaned_data
             aikeuser.alias=cd['alias']
             aikeuser.name=cd['name']
             aikeuser.sex=bool(int(cd['sex']))
-            aikeuser.email=cd['email']
             aikeuser.age=cd['age']
             aikeuser.city=cd['city']
             aikeuser.university=cd['university']

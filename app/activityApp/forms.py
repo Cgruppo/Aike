@@ -2,7 +2,7 @@
 from django import forms
 from app.activityApp.models import Activity, Comment
     
-class ActivityCreateForm(forms.Form):
+class ActivityCreateForm(forms.ModelForm):
     name = forms.CharField(label="活动名称")
     introduction = forms.CharField(label="简介",widget=forms.Textarea(attrs={'class':'span6','row':'5','style':'resize:none'}))
     place = forms.CharField(label="地点")
@@ -10,6 +10,7 @@ class ActivityCreateForm(forms.Form):
     date = forms.DateField(label="举办时间",widget=forms.DateInput(attrs={'placeholder':'格式举例:2013-01-17'}))
     class Meta:
         model = Activity
+        exclude = ('participant','sponsor','creater','organizer')    
 
 
 class CommentAddForm(forms.Form):

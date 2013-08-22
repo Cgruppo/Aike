@@ -1,5 +1,6 @@
 {% extends 'base.tpl' %}
 {% block content %}
+
 <h2 style="text-align:center">创建属于你的活动吧！</h2>
 <div class="row">
 	<div class="span3">
@@ -10,6 +11,7 @@
 
 	<div class="span8 well">
 		<form atcion="/create/" method="POST">
+			{% csrf_token %}
 		<dl>
 		<dt>活动名称：</dt>
 		<dd>{{ActivityCreateForm.name}}</dd>
@@ -34,17 +36,12 @@
 {% endblock%}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="/static/datepicker/css/datepicker.css" />
-<link rel="stylesheet" type="text/css" href="/static/bootstrap-wysihtml5/css/bootstrap-wysihtml5.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-datepicker.css" />
 {% endblock%}
 
 {% block js %}
-<script type="text/javascript" src="/static/datepicker/js/bootstrap-datepicker.js"></script>
-<script type="text/javascript" src="/static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>
-<script type="text/javascript" src="/static/bootstrap-wysihtml5/js/wysihtml5.min.js"></script>
-<script type="text/javascript" src="/static/bootstrap-wysihtml5/js/bootstrap-wysihtml5.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
 $("#id_date").datepicker({format:"yyyy-mm-dd"});
-$("#id_introduction").wysihtml5();
 </script>
 {% endblock %}

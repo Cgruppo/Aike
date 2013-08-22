@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
 <div class="span3 well">
-	{% include 'acnavlist.tpl' %}
+	{% include 'activity/acnavlist.tpl' %}
 </div>
 
 <div class="span8 well">
@@ -12,8 +12,8 @@
 	<br><dt>活动举办方：</dt>
 	<dd>
 	<div style="padding:10px">
-	{% for organizerR in activity.organizerR_activity.all %}
-		<a href="/u{{organizerR.user.id}}" class="alert alert-info">{{organizerR.user.alias}}<i class="icon-user"></i></a>&nbsp;
+	{% for organizer in activity.organizer.all %}
+		<a href="/u{{organizerR.user.id}}">{{organizer.aikeuser.alias}}<i class="icon-user"></i></a>&nbsp;
 		{% endfor %}
 	</div>
 	</dd>
@@ -36,7 +36,7 @@
 	<div class="well">
 	{% for comment in comments %}	
 	{% if comment %}
-		{% if comment.owner in activity.organizer_activity.all %}
+		{% if comment.owner in activity.organizer.all %}
 		<dl style="background:pink" class="well">
 		<dt style="text-align:right">{{comment.owner.alias}}</dt>
 		{% else %}

@@ -25,7 +25,7 @@ def v_index(request):
     """用于展示首页"""
     data={}
     if request.user.is_authenticated():
-        data['user']=request.user.account
+        data['user']=request.user.username
     data['title']="爱克,释放你的活力！"
     data['activitycount'] = len(Activity.objects.all())
     data['usercount'] = len(User.objects.all())
